@@ -20,25 +20,27 @@ class MainScene extends Phaser.Scene {
 
     // シーン初期化処理
     create() {
-         // 単体画像をシーンに追加(X座標,Y座標,画像名)
         this.add.image(400, 300, 'background');
-        
-
-        const taro = this.physics.add.sprite(50, 50, 'taro')
-        const hanako = this.physics.add.sprite(750, 400, 'hanako')
-        for(let i=0; i<5; i++){
-        let  randx = Phaser.Math.Between(25, 775) ;  // y は　50～750の間の値
+        const taro = this.physics.add.sprite(50, 50, 'taro');
+        this.taro = taro;
+        const hanako = this.physics.add.sprite(750, 400, 'hanako');
+        this.hanako = hanako;
+        let staticGroup = this.physics.add.staticGroup();
+        for(let i = 0; i < 5; i++){
+        let randx = Phaser.Math.Between(25, 775) ; // y は　50～750の間の値
         let randy =  Phaser.Math.Between(25, 425) ;  // y は　50～200の間の値
-        this.add.image(randx, randy , 'orange'); }//ランダムな場所に生成
-        for(let i=0; i<5; i++){
-        let  randa = Phaser.Math.Between(25, 775) ;  // y は　50～750の間の値
-        let randb =  Phaser.Math.Between(25, 425) ;  // y は　50～200の間の値
-        this.add.image(randa, randb , 'apple');} //ランダムな場所に生成
-        this.taro = taro
-        this.hanako = hanako
-
-        
+        staticGroup.create(randx,randy,'apple');
         }
+        for(let i = 0; i < 5; i++){
+        let randx2 = Phaser.Math.Between(25, 775) ; // y は　50～750の間の値
+        let randy2 =  Phaser.Math.Between(25, 425) ;
+        staticGroup.create(randx2,randy2,'orange');
+        }
+        this.physics.add.overlap(taro, staticGroup, stopgame, null, this);
+        function stopgame(p){
+            this.physics.pause();
+        }
+    }
      // 毎フレーム実行される繰り返し処理
     update(time, delta) {
          // キーボードの情報を取
@@ -64,6 +66,6 @@ class MainScene extends Phaser.Scene {
              this.taro.setVelocityY(0);// 縦方向の速度を0
              this.hanako.setVelocityX(0);// 横方向の速度を0
              this.hanako.setVelocityY(0);// 縦方向の速度を0
-         }
+        }
     }
 }
