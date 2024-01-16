@@ -1,11 +1,12 @@
 // シーンクラス
 // 他のJSファイルから呼び出された場合はシーンを返す
 class MainScene extends Phaser.Scene {
-    
+    //count = 0;
     // コンストラクタ
     constructor() {
         // 継承した「Phaser.Scene」クラスのコンストラクタの呼び出し
         super('MainScene');
+        this.count = 0; //取得したフルーツの数を数える
     }
 
     // シーンの事前読み込み処理
@@ -38,13 +39,15 @@ class MainScene extends Phaser.Scene {
 
         
 
-        this.physics.add.overlap(taro, staticGroup, collectf, null, this);
+        // this.physics.add.overlap(taro, staticGroup, collectf, null, this);
         function collectf(){
-        this.physics.pause(this.add.text(D_WIDTH/3,D_HEIGHT*1/3, 'Game Over!', { fontSize: '32px', fill: '#CDC' }));
+        //this.physics.pause(this.add.text(D_WIDTH/3,D_HEIGHT*1/3, 'Game Over!', { fontSize: '32px', fill: '#CDC' }));
         }
-        this.physics.add.overlap(hanako, staticGroup, collectf, null, this);
-        function collectf(){
-        this.physics.pause(this.add.text(D_WIDTH/3,D_HEIGHT*1/3, 'Game Over!', { fontSize: '32px', fill: '#CDC' }));
+        this.physics.add.overlap(hanako, staticGroup, collectf2, null, this);
+        function collectf2(hanako,fruit){
+        this.count += 1;
+        fruit.destroy();//フルーツを消す
+        // this.physics.pause(this.add.text(D_WIDTH/3,D_HEIGHT*1/3, 'Game Over!', { fontSize: '32px', fill: '#CDC' }));
         }
         
         }
@@ -74,6 +77,9 @@ class MainScene extends Phaser.Scene {
              this.hanako.setVelocityX(0);// 横方向の速度を0
              this.hanako.setVelocityY(0);// 縦方向の速度を0
          }
+         //フルーツを10個取ったらゲームを止める
+         if(this.count >= 10){
+            this.physics.pause(this.add.text(D_WIDTH/3,D_HEIGHT*1/3, 'Clear', { fontSize: '32px', fill: '#CDC' }));
+         }
     }
-
 }
